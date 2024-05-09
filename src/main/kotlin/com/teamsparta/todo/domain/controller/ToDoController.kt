@@ -13,6 +13,13 @@ class ToDoController(
     private val toDoService: ToDoService
 ) {
 
+    @GetMapping
+    fun getAllToDos(): ResponseEntity<List<ToDoResponse>> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(toDoService.getAllToDos())
+    }
+
     @PostMapping
     fun createToDo(@RequestBody request: CreateToDoRequest): ResponseEntity<ToDoResponse> {
         return ResponseEntity
