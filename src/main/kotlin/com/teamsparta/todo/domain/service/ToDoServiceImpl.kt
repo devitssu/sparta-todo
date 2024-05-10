@@ -27,4 +27,9 @@ class ToDoServiceImpl(
         val todo = toDoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("ToDo", id)
         return todo.toResponse()
     }
+
+    override fun deleteToDo(todoId: Long) {
+        val todo = toDoRepository.findByIdOrNull(todoId) ?: throw ModelNotFoundException("ToDo", todoId)
+        toDoRepository.delete(todo)
+    }
 }

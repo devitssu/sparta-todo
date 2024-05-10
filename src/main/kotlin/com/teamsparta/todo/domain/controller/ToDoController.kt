@@ -33,4 +33,12 @@ class ToDoController(
             .status(HttpStatus.CREATED)
             .body(toDoService.createToDo(request))
     }
+
+    @DeleteMapping("/{todoId}")
+    fun deleteToDo(@PathVariable todoId: Long): ResponseEntity<Void> {
+        toDoService.deleteToDo(todoId)
+        return ResponseEntity
+            .status(HttpStatus.NO_CONTENT)
+            .build()
+    }
 }

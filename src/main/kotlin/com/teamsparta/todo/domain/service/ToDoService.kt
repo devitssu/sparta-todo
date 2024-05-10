@@ -7,4 +7,5 @@ interface ToDoService {
     fun createToDo(request: CreateToDoRequest): ToDoResponse
     fun getAllToDos(): List<ToDoResponse>
     fun getToDoById(id: Long): ToDoResponse
+    fun deleteToDo(todoId: Long)
 }
