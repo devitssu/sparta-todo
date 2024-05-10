@@ -2,6 +2,7 @@ package com.teamsparta.todo.domain.controller
 
 import com.teamsparta.todo.domain.dto.CreateToDoRequest
 import com.teamsparta.todo.domain.dto.ToDoResponse
+import com.teamsparta.todo.domain.dto.UpdateToDoRequest
 import com.teamsparta.todo.domain.service.ToDoService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -32,6 +33,13 @@ class ToDoController(
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(toDoService.createToDo(request))
+    }
+
+    @PutMapping("/{toDoId}")
+    fun updateToDo(@PathVariable toDoId: Long, @RequestBody request: UpdateToDoRequest): ResponseEntity<ToDoResponse> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(toDoService.updateToDo(toDoId, request))
     }
 
     @DeleteMapping("/{todoId}")

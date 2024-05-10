@@ -2,6 +2,7 @@ package com.teamsparta.todo.domain.service
 
 import com.teamsparta.todo.domain.dto.CreateToDoRequest
 import com.teamsparta.todo.domain.dto.ToDoResponse
+import com.teamsparta.todo.domain.dto.UpdateToDoRequest
 import com.teamsparta.todo.domain.dto.toEntity
 import com.teamsparta.todo.domain.model.toResponse
 import com.teamsparta.todo.domain.repository.ToDoRepository
@@ -31,5 +32,15 @@ class ToDoServiceImpl(
     override fun deleteToDo(todoId: Long) {
         val todo = toDoRepository.findByIdOrNull(todoId) ?: throw ModelNotFoundException("ToDo", todoId)
         toDoRepository.delete(todo)
+    }
+
+    override fun updateToDo(toDoId: Long, request: UpdateToDoRequest): ToDoResponse? {
+        val todo = toDoRepository.findByIdOrNull(toDoId) ?: throw ModelNotFoundException("ToDo", toDoId)
+
+        todo.title = request.title
+        todo.content = request.content
+        todo.createdBy = request.createdBy
+
+        return toDoRepository.save(todo).toResponse()
     }
 }
