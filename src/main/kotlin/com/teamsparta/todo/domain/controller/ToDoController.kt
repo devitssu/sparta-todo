@@ -20,6 +20,13 @@ class ToDoController(
             .body(toDoService.getAllToDos())
     }
 
+    @GetMapping("/{toDoId}")
+    fun getToDo(@PathVariable toDoId: Long): ResponseEntity<ToDoResponse> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(toDoService.getToDoById(toDoId))
+    }
+
     @PostMapping
     fun createToDo(@RequestBody request: CreateToDoRequest): ResponseEntity<ToDoResponse> {
         return ResponseEntity
