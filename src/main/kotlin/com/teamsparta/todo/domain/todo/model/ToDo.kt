@@ -1,11 +1,7 @@
-package com.teamsparta.todo.domain.model
+package com.teamsparta.todo.domain.todo.model
 
-import com.teamsparta.todo.domain.dto.ToDoResponse
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import com.teamsparta.todo.domain.todo.dto.ToDoResponse
+import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
@@ -21,6 +17,9 @@ class ToDo(
 
     @Column(name = "createdAt")
     var createdAt: LocalDateTime,
+
+    @Column(name = "status")
+    var status: Boolean = false,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,5 +33,6 @@ fun ToDo.toResponse(): ToDoResponse {
         content = this.content,
         createdBy = this.createdBy,
         createdAt = this.createdAt,
+        status = this.status
     )
 }

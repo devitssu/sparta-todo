@@ -1,6 +1,6 @@
-package com.teamsparta.todo.domain.dto
+package com.teamsparta.todo.domain.todo.dto
 
-import com.teamsparta.todo.domain.model.ToDo
+import com.teamsparta.todo.domain.todo.model.ToDo
 import java.time.LocalDateTime
 
 data class CreateToDoRequest (

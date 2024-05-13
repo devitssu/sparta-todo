@@ -1,9 +1,9 @@
-package com.teamsparta.todo.domain.controller
+package com.teamsparta.todo.domain.todo.controller
 
-import com.teamsparta.todo.domain.dto.CreateToDoRequest
-import com.teamsparta.todo.domain.dto.ToDoResponse
-import com.teamsparta.todo.domain.dto.UpdateToDoRequest
-import com.teamsparta.todo.domain.service.ToDoService
+import com.teamsparta.todo.domain.todo.dto.CreateToDoRequest
+import com.teamsparta.todo.domain.todo.dto.ToDoResponse
+import com.teamsparta.todo.domain.todo.dto.UpdateToDoRequest
+import com.teamsparta.todo.domain.todo.service.ToDoService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -42,6 +42,16 @@ class ToDoController(
             .body(toDoService.updateToDo(toDoId, request))
     }
 
+    @PatchMapping("/{toDoId}")
+    fun updateToDoStatus(
+        @PathVariable toDoId: Long,
+        @RequestParam("status") status: Boolean
+    ): ResponseEntity<ToDoResponse> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(toDoService.updateToDoStatus(toDoId, status))
+    }
+
     @DeleteMapping("/{todoId}")
     fun deleteToDo(@PathVariable todoId: Long): ResponseEntity<Void> {
         toDoService.deleteToDo(todoId)
@@ -49,4 +59,6 @@ class ToDoController(
             .status(HttpStatus.NO_CONTENT)
             .build()
     }
+
+
 }

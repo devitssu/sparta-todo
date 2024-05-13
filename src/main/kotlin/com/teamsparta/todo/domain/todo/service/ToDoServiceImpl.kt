@@ -1,11 +1,11 @@
-package com.teamsparta.todo.domain.service
+package com.teamsparta.todo.domain.todo.service
 
-import com.teamsparta.todo.domain.dto.CreateToDoRequest
-import com.teamsparta.todo.domain.dto.ToDoResponse
-import com.teamsparta.todo.domain.dto.UpdateToDoRequest
-import com.teamsparta.todo.domain.dto.toEntity
-import com.teamsparta.todo.domain.model.toResponse
-import com.teamsparta.todo.domain.repository.ToDoRepository
+import com.teamsparta.todo.domain.todo.dto.CreateToDoRequest
+import com.teamsparta.todo.domain.todo.dto.ToDoResponse
+import com.teamsparta.todo.domain.todo.dto.UpdateToDoRequest
+import com.teamsparta.todo.domain.todo.dto.toEntity
+import com.teamsparta.todo.domain.todo.model.toResponse
+import com.teamsparta.todo.domain.todo.repository.ToDoRepository
 import com.teamsparta.todo.exception.ModelNotFoundException
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
@@ -41,6 +41,12 @@ class ToDoServiceImpl(
         todo.content = request.content
         todo.createdBy = request.createdBy
 
+        return toDoRepository.save(todo).toResponse()
+    }
+
+    override fun updateToDoStatus(toDoId: Long, status: Boolean): ToDoResponse? {
+        val todo = toDoRepository.findByIdOrNull(toDoId) ?: throw ModelNotFoundException("ToDo", toDoId)
+        todo.status = status
         return toDoRepository.save(todo).toResponse()
     }
 }

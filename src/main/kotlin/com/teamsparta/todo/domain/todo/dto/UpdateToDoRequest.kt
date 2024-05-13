@@ -1,4 +1,4 @@
-package com.teamsparta.todo.domain.dto
+package com.teamsparta.todo.domain.todo.dto
 
 data class UpdateToDoRequest (
     var title: String,
