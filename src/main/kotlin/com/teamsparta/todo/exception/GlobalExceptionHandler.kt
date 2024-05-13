@@ -21,4 +21,11 @@ class GlobalExceptionHandler {
             .status(HttpStatus.CONFLICT)
             .body(ErrorResponse(message = e.message))
     }
+
+    @ExceptionHandler(UnauthorizedException::class)
+    fun handleUnauthorizedException(e: UnauthorizedException): ResponseEntity<ErrorResponse> {
+        return ResponseEntity
+            .status(HttpStatus.UNAUTHORIZED)
+            .body(ErrorResponse(message = e.message))
+    }
 }
