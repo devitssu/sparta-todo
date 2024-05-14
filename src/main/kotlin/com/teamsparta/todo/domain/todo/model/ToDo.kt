@@ -1,6 +1,7 @@
 package com.teamsparta.todo.domain.todo.model
 
 import com.teamsparta.todo.domain.comment.model.Comment
+import com.teamsparta.todo.domain.comment.model.toResponse
 import com.teamsparta.todo.domain.todo.dto.ToDoResponse
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -41,6 +42,7 @@ fun ToDo.toResponse(): ToDoResponse {
         content = this.content,
         createdBy = this.createdBy,
         createdAt = this.createdAt,
-        status = this.status
+        status = this.status,
+        comments = this.comments.map{it.toResponse()}
     )
 }
