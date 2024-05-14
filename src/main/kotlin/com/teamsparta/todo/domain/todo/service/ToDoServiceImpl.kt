@@ -21,11 +21,11 @@ class ToDoServiceImpl(
     }
 
     override fun getAllToDos(sort: String): List<ToDoResponse> {
-        val direction = when (sort) {
-            "asc" -> Sort.Direction.ASC
-            else -> Sort.Direction.DESC
-        }
-        return toDoRepository.findAll(Sort.by(direction, "createdAt")).map { it.toResponse() }
+        return toDoRepository.findAll(Sort.by(getDirection(sort), "createdAt")).map { it.toResponse() }
+    }
+
+    override fun getFilteredToDos(sort: String, keyword: String): List<ToDoResponse> {
+        return toDoRepository.findByCreatedBy(keyword, Sort.by(getDirection(sort), "createdAt")).map { it.toResponse() }
     }
 
     override fun getToDoById(id: Long): ToDoResponse {
@@ -52,5 +52,10 @@ class ToDoServiceImpl(
         val todo = toDoRepository.findByIdOrNull(toDoId) ?: throw ModelNotFoundException("ToDo", toDoId)
         todo.status = status
         return toDoRepository.save(todo).toResponse()
+    }
+
+    private fun getDirection(sort: String) = when (sort) {
+        "asc" -> Sort.Direction.ASC
+        else -> Sort.Direction.DESC
     }
 }

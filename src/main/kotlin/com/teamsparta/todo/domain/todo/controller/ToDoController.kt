@@ -16,14 +16,19 @@ class ToDoController(
 
     @GetMapping
     fun getAllToDos(
-        @RequestParam(
-            required = false,
-            defaultValue = "desc"
-        ) sort: String
+        @RequestParam(required = false,  defaultValue = "desc") sort: String,
+        @RequestParam(required = false) keyword: String?
     ): ResponseEntity<List<ToDoResponse>> {
+
+        val body = if (keyword != null) {
+            toDoService.getFilteredToDos(sort, keyword)
+        } else {
+            toDoService.getAllToDos(sort)
+        }
+
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(toDoService.getAllToDos(sort))
+            .body(body)
     }
 
     @GetMapping("/{toDoId}")

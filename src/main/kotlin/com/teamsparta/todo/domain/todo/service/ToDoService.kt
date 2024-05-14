@@ -11,4 +11,5 @@ interface ToDoService {
     fun deleteToDo(todoId: Long)
     fun updateToDo(toDoId: Long, request: UpdateToDoRequest): ToDoResponse?
     fun updateToDoStatus(toDoId: Long, status: Boolean): ToDoResponse?
+    fun getFilteredToDos(sort: String, keyword: String): List<ToDoResponse>
 }
