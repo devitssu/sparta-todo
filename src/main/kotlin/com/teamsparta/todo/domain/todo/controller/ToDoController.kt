@@ -15,10 +15,15 @@ class ToDoController(
 ) {
 
     @GetMapping
-    fun getAllToDos(): ResponseEntity<List<ToDoResponse>> {
+    fun getAllToDos(
+        @RequestParam(
+            required = false,
+            defaultValue = "desc"
+        ) sort: String
+    ): ResponseEntity<List<ToDoResponse>> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(toDoService.getAllToDos())
+            .body(toDoService.getAllToDos(sort))
     }
 
     @GetMapping("/{toDoId}")

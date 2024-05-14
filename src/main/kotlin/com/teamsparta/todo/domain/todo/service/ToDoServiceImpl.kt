@@ -20,8 +20,12 @@ class ToDoServiceImpl(
         return toDoRepository.save(request.toEntity()).toResponse()
     }
 
-    override fun getAllToDos(): List<ToDoResponse> {
-        return toDoRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")).map { it.toResponse() }
+    override fun getAllToDos(sort: String): List<ToDoResponse> {
+        val direction = when (sort) {
+            "asc" -> Sort.Direction.ASC
+            else -> Sort.Direction.DESC
+        }
+        return toDoRepository.findAll(Sort.by(direction, "createdAt")).map { it.toResponse() }
     }
 
     override fun getToDoById(id: Long): ToDoResponse {
