@@ -1,9 +1,6 @@
 package com.teamsparta.todo.domain.comment.service
 
-import com.teamsparta.todo.domain.comment.dto.AddCommentRequest
-import com.teamsparta.todo.domain.comment.dto.CommentResponse
-import com.teamsparta.todo.domain.comment.dto.DeleteCommentRequest
-import com.teamsparta.todo.domain.comment.dto.UpdateCommentRequest
+import com.teamsparta.todo.domain.comment.dto.*
 import com.teamsparta.todo.domain.comment.model.Comment
 import com.teamsparta.todo.domain.comment.model.toResponse
 import com.teamsparta.todo.domain.comment.repository.CommentRepository
@@ -23,14 +20,7 @@ class CommentServiceImpl(
     override fun addComment(toDoId: Long, request: AddCommentRequest): CommentResponse {
         val todo = toDoRepository.findByIdOrNull(toDoId) ?: throw ModelNotFoundException("ToDo", toDoId)
 
-        val comment = Comment(
-            content = request.content,
-            createdBy = request.createdBy,
-            password = request.password,
-            toDo = todo,
-            createdAt = LocalDateTime.now()
-        )
-
+        val comment = request.toEntity(todo)
         todo.addComment(comment)
 
         return commentRepository.save(comment).toResponse()
