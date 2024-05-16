@@ -9,14 +9,12 @@ import com.teamsparta.todo.exception.ModelNotFoundException
 import com.teamsparta.todo.exception.UnauthorizedException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import org.springframework.web.client.HttpClientErrorException.Unauthorized
-import java.time.LocalDateTime
 
 @Service
 class CommentServiceImpl(
-    private val commentRepository : CommentRepository,
+    private val commentRepository: CommentRepository,
     private val toDoRepository: ToDoRepository
-): CommentService {
+) : CommentService {
     override fun addComment(toDoId: Long, request: AddCommentRequest): CommentResponse {
         val todo = toDoRepository.findByIdOrNull(toDoId) ?: throw ModelNotFoundException("ToDo", toDoId)
 
@@ -27,18 +25,20 @@ class CommentServiceImpl(
     }
 
     override fun updateComment(toDoId: Long, commentId: Long, request: UpdateCommentRequest): CommentResponse {
-        val todo = toDoRepository.findByIdOrNull(toDoId) ?: throw ModelNotFoundException("ToDo", toDoId)
+        toDoRepository.findByIdOrNull(toDoId) ?: throw ModelNotFoundException("ToDo", toDoId)
         val comment = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("Comment", commentId)
 
-        if(isValid(comment, request.createdBy, request.password)) {
+        if (isValid(comment, request.createdBy, request.password)) {
             comment.content = request.content
             return commentRepository.save(comment).toResponse()
         } else throw UnauthorizedException("수정할 수 있는 권한이 없습니다.")
     }
 
     override fun deleteComment(toDoId: Long, commentId: Long, request: DeleteCommentRequest) {
+        toDoRepository.findByIdOrNull(toDoId) ?: throw ModelNotFoundException("ToDo", toDoId)
         val comment = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("Comment", commentId)
-        if(isValid(comment, request.createdBy, request.password)) {
+        
+        if (isValid(comment, request.createdBy, request.password)) {
             commentRepository.delete(comment)
         } else throw UnauthorizedException("삭제할 수 있는 권한이 없습니다.")
     }

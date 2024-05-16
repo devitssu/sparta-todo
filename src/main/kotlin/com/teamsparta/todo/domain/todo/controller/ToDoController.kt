@@ -7,7 +7,6 @@ import com.teamsparta.todo.domain.todo.service.ToDoService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/api/todos")
@@ -18,7 +17,7 @@ class ToDoController(
 
     @GetMapping
     fun getAllToDos(
-        @RequestParam(required = false,  defaultValue = "desc") sort: String,
+        @RequestParam(required = false, defaultValue = "desc") sort: String,
         @RequestParam(required = false) keyword: String?
     ): ResponseEntity<List<ToDoResponse>> {
 
@@ -48,7 +47,10 @@ class ToDoController(
     }
 
     @PutMapping("/{toDoId}")
-    fun updateToDo(@PathVariable toDoId: Long, @Valid @RequestBody request: UpdateToDoRequest): ResponseEntity<ToDoResponse> {
+    fun updateToDo(
+        @PathVariable toDoId: Long,
+        @Valid @RequestBody request: UpdateToDoRequest
+    ): ResponseEntity<ToDoResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(toDoService.updateToDo(toDoId, request))
