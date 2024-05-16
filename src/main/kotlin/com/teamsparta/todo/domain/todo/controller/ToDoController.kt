@@ -4,8 +4,10 @@ import com.teamsparta.todo.domain.todo.dto.CreateToDoRequest
 import com.teamsparta.todo.domain.todo.dto.ToDoResponse
 import com.teamsparta.todo.domain.todo.dto.UpdateToDoRequest
 import com.teamsparta.todo.domain.todo.service.ToDoService
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/api/todos")
@@ -39,14 +41,14 @@ class ToDoController(
     }
 
     @PostMapping
-    fun createToDo(@RequestBody request: CreateToDoRequest): ResponseEntity<ToDoResponse> {
+    fun createToDo(@Valid @RequestBody request: CreateToDoRequest): ResponseEntity<ToDoResponse> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(toDoService.createToDo(request))
     }
 
     @PutMapping("/{toDoId}")
-    fun updateToDo(@PathVariable toDoId: Long, @RequestBody request: UpdateToDoRequest): ResponseEntity<ToDoResponse> {
+    fun updateToDo(@PathVariable toDoId: Long, @Valid @RequestBody request: UpdateToDoRequest): ResponseEntity<ToDoResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(toDoService.updateToDo(toDoId, request))

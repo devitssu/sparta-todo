@@ -12,7 +12,7 @@ class ToDo(
     var title: String,
 
     @Column(name = "content")
-    var content: String? = null,
+    var content: String,
 
     @Column(name = "createdBy")
     var createdBy: String,
