@@ -15,7 +15,6 @@ data class CreateToDoRequest (
     val content: String,
 
     val createdBy: String,
-    val createdAt: LocalDateTime = LocalDateTime.now(),
 )
 
 fun CreateToDoRequest.toEntity(): ToDo {
@@ -23,6 +22,6 @@ fun CreateToDoRequest.toEntity(): ToDo {
         title = this.title,
         content = this.content,
         createdBy = this.createdBy,
-        createdAt = this.createdAt,
+        createdAt = LocalDateTime.now(),
     )
 }

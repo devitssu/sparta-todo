@@ -9,7 +9,7 @@ interface ToDoService {
     fun getAllToDos(sort: String): List<ToDoResponse>
     fun getToDoById(id: Long): ToDoResponse
     fun deleteToDo(todoId: Long)
-    fun updateToDo(toDoId: Long, request: UpdateToDoRequest): ToDoResponse?
-    fun updateToDoStatus(toDoId: Long, status: Boolean): ToDoResponse?
+    fun updateToDo(toDoId: Long, request: UpdateToDoRequest): ToDoResponse
+    fun updateToDoStatus(toDoId: Long, status: Boolean): ToDoResponse
     fun getFilteredToDos(sort: String, keyword: String): List<ToDoResponse>
 }

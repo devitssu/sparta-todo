@@ -38,7 +38,7 @@ class ToDoServiceImpl(
         toDoRepository.delete(todo)
     }
 
-    override fun updateToDo(toDoId: Long, request: UpdateToDoRequest): ToDoResponse? {
+    override fun updateToDo(toDoId: Long, request: UpdateToDoRequest): ToDoResponse {
         val todo = toDoRepository.findByIdOrNull(toDoId) ?: throw ModelNotFoundException("ToDo", toDoId)
 
         todo.title = request.title
@@ -48,7 +48,7 @@ class ToDoServiceImpl(
         return toDoRepository.save(todo).toResponse()
     }
 
-    override fun updateToDoStatus(toDoId: Long, status: Boolean): ToDoResponse? {
+    override fun updateToDoStatus(toDoId: Long, status: Boolean): ToDoResponse {
         val todo = toDoRepository.findByIdOrNull(toDoId) ?: throw ModelNotFoundException("ToDo", toDoId)
         todo.status = status
         return toDoRepository.save(todo).toResponse()
