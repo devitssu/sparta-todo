@@ -16,13 +16,6 @@ class GlobalExceptionHandler {
             .body(ErrorResponse(message = e.message))
     }
 
-    @ExceptionHandler(IllegalStateException::class)
-    fun handleIllegalStateException(e: IllegalStateException): ResponseEntity<ErrorResponse> {
-        return ResponseEntity
-            .status(HttpStatus.CONFLICT)
-            .body(ErrorResponse(message = e.message))
-    }
-
     @ExceptionHandler(UnauthorizedException::class)
     fun handleUnauthorizedException(e: UnauthorizedException): ResponseEntity<ErrorResponse> {
         return ResponseEntity
@@ -32,7 +25,7 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<MutableMap<String, Any>> {
-        val body:MutableMap<String, Any> = mutableMapOf("statusCode" to "400")
+        val body: MutableMap<String, Any> = mutableMapOf("statusCode" to "400")
         val errors: MutableMap<String, String> = mutableMapOf()
 
         e.bindingResult.fieldErrors.forEach { fieldError ->
