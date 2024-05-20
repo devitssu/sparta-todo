@@ -28,7 +28,7 @@ class ToDo(
 
 fun ToDo.toResponse(): ToDoResponse {
     return ToDoResponse(
-        id = id!!,
+        id = id ?: throw IllegalStateException("Todo ID is null"),
         title = this.title,
         content = this.content,
         createdBy = this.createdBy,

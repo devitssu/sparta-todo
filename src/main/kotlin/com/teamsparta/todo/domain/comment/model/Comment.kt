@@ -23,7 +23,7 @@ class Comment(
 
 fun Comment.toResponse(): CommentResponse {
     return CommentResponse(
-        id = id!!,
+        id = id ?: throw IllegalStateException("Comment ID is null"),
         content = this.content,
         createdBy = this.createdBy,
         createdAt = this.createdAt,
