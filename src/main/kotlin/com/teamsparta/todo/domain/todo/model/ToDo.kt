@@ -8,19 +8,10 @@ import java.time.LocalDateTime
 
 @Entity
 class ToDo(
-    @Column(name = "title")
     var title: String,
-
-    @Column(name = "content")
     var content: String,
-
-    @Column(name = "createdBy")
     var createdBy: String,
-
-    @Column(name = "createdAt")
     var createdAt: LocalDateTime,
-
-    @Column(name = "status")
     var status: Boolean = false,
 
     @OneToMany(mappedBy = "toDo", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
@@ -43,6 +34,6 @@ fun ToDo.toResponse(): ToDoResponse {
         createdBy = this.createdBy,
         createdAt = this.createdAt,
         status = this.status,
-        comments = this.comments.map{it.toResponse()}
+        comments = this.comments.map { it.toResponse() }
     )
 }

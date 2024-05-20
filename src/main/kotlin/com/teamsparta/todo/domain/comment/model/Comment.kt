@@ -7,16 +7,9 @@ import java.time.LocalDateTime
 
 @Entity
 class Comment(
-    @Column(name = "content")
     var content: String,
-
-    @Column(name = "createdBy")
     var createdBy: String,
-
-    @Column(name = "password")
     var password: String,
-
-    @Column(name = "createdAt")
     var createdAt: LocalDateTime,
 
     @ManyToOne(fetch = FetchType.LAZY)
