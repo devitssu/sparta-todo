@@ -5,6 +5,7 @@ import com.teamsparta.todo.domain.todo.dto.ToDoResponse
 import com.teamsparta.todo.domain.todo.dto.UpdateToDoRequest
 import com.teamsparta.todo.domain.todo.service.ToDoService
 import jakarta.validation.Valid
+import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -18,13 +19,14 @@ class ToDoController(
     @GetMapping
     fun getAllToDos(
         @RequestParam(required = false, defaultValue = "desc") sort: String,
-        @RequestParam(required = false) keyword: String?
-    ): ResponseEntity<List<ToDoResponse>> {
+        @RequestParam(required = false) keyword: String?,
+        @RequestParam(required = false, defaultValue = "0") cursor: Long
+    ): ResponseEntity<Any> {
 
         val body = if (keyword != null) {
-            toDoService.getFilteredToDos(sort, keyword)
+            toDoService.getFilteredToDos(sort, keyword, cursor)
         } else {
-            toDoService.getAllToDos(sort)
+            toDoService.getAllToDos(sort, cursor)
         }
 
         return ResponseEntity
@@ -74,5 +76,9 @@ class ToDoController(
             .build()
     }
 
+    private fun getDirection(sort: String) = when (sort) {
+        "asc" -> Sort.Direction.ASC
+        else -> Sort.Direction.DESC
+    }
 
 }

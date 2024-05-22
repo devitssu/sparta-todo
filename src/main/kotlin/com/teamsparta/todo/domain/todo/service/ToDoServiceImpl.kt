@@ -1,12 +1,11 @@
 package com.teamsparta.todo.domain.todo.service
 
-import com.teamsparta.todo.domain.todo.dto.CreateToDoRequest
-import com.teamsparta.todo.domain.todo.dto.ToDoResponse
-import com.teamsparta.todo.domain.todo.dto.UpdateToDoRequest
-import com.teamsparta.todo.domain.todo.dto.toEntity
+import com.teamsparta.todo.domain.todo.dto.*
 import com.teamsparta.todo.domain.todo.model.toResponse
 import com.teamsparta.todo.domain.todo.repository.ToDoRepository
 import com.teamsparta.todo.exception.ModelNotFoundException
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -16,16 +15,48 @@ class ToDoServiceImpl(
     private val toDoRepository: ToDoRepository
 ) : ToDoService {
 
+    private val pageSize = 5
+
     override fun createToDo(request: CreateToDoRequest): ToDoResponse {
         return toDoRepository.save(request.toEntity()).toResponse()
     }
 
-    override fun getAllToDos(sort: String): List<ToDoResponse> {
-        return toDoRepository.findAll(Sort.by(getDirection(sort), "createdAt")).map { it.toResponse() }
+    override fun getAllToDos(sort: String, cursor: Long): SliceResponse<ToDoResponse> {
+        val direction = getDirection(sort)
+        val pageable: Pageable = PageRequest.of(0, pageSize, direction, "id")
+
+        val slice = if (cursor == 0L) {
+            toDoRepository.findSliceBy(pageable)
+        } else {
+            when (direction) {
+                Sort.Direction.ASC -> toDoRepository.findSliceByIdGreaterThan(cursor, pageable)
+                Sort.Direction.DESC -> toDoRepository.findSliceByIdLessThan(cursor, pageable)
+            }
+        }
+
+        val nextCursor =
+            if (slice.isLast) -1 else slice.content.last().id ?: throw IllegalStateException("Todo ID is null")
+
+        return SliceResponse<ToDoResponse>(slice.content.map { it.toResponse() }.toList(), nextCursor)
     }
 
-    override fun getFilteredToDos(sort: String, keyword: String): List<ToDoResponse> {
-        return toDoRepository.findByCreatedBy(keyword, Sort.by(getDirection(sort), "createdAt")).map { it.toResponse() }
+    override fun getFilteredToDos(sort: String, keyword: String, cursor: Long): SliceResponse<ToDoResponse> {
+        val direction = getDirection(sort)
+        val pageable: Pageable = PageRequest.of(0, pageSize, direction, "id")
+
+        val slice = if (cursor == 0L) {
+            toDoRepository.findByCreatedBy(keyword, pageable)
+        } else {
+            when (direction) {
+                Sort.Direction.ASC -> toDoRepository.findByCreatedByAndIdGreaterThan(keyword, cursor, pageable)
+                Sort.Direction.DESC -> toDoRepository.findByCreatedByAndIdLessThan(keyword, cursor, pageable)
+            }
+        }
+
+        val nextCursor =
+            if (slice.isLast) -1 else slice.content.last().id ?: throw IllegalStateException("Todo ID is null")
+
+        return SliceResponse<ToDoResponse>(slice.content.map { it.toResponse() }.toList(), nextCursor)
     }
 
     override fun getToDoById(id: Long): ToDoResponse {
