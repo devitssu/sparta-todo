@@ -4,6 +4,7 @@ import com.teamsparta.todo.domain.comment.model.Comment
 import com.teamsparta.todo.domain.comment.model.toResponse
 import com.teamsparta.todo.domain.todo.dto.ToDoResponse
 import jakarta.persistence.*
+import org.hibernate.annotations.BatchSize
 import java.time.LocalDateTime
 
 @Entity
@@ -14,6 +15,7 @@ class ToDo(
     var createdAt: LocalDateTime,
     var status: Boolean = false,
 
+    @BatchSize(size = 100)
     @OneToMany(mappedBy = "toDo", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     var comments: MutableList<Comment> = mutableListOf()
 ) {
