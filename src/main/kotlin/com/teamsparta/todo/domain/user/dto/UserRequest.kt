@@ -3,7 +3,7 @@ package com.teamsparta.todo.domain.user.dto
 import com.teamsparta.todo.domain.user.model.User
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
-import org.hibernate.validator.constraints.Range
+import org.hibernate.validator.constraints.Length
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.time.LocalDateTime
 
@@ -15,7 +15,7 @@ data class SingUpRequest(
     @field:NotBlank
     val name: String,
 
-    @field:Range(min = 4, max = 20)
+    @field:Length(min = 4, max = 20)
     val password: String
 ) {
     fun toEntity(passwordEncoder: PasswordEncoder): User {
@@ -33,6 +33,6 @@ data class SignInRequest(
     @field:Email
     val email: String,
 
-    @field:Range(min = 4, max = 20)
+    @field:Length(min = 4, max = 20)
     val password: String
 )
