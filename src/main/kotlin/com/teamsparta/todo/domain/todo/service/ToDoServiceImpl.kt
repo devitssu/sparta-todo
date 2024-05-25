@@ -1,7 +1,6 @@
 package com.teamsparta.todo.domain.todo.service
 
 import com.teamsparta.todo.domain.todo.dto.*
-import com.teamsparta.todo.domain.todo.model.toResponse
 import com.teamsparta.todo.domain.todo.repository.ToDoRepository
 import com.teamsparta.todo.exception.ModelNotFoundException
 import org.springframework.data.domain.PageRequest
@@ -9,6 +8,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ToDoServiceImpl(
@@ -17,6 +17,7 @@ class ToDoServiceImpl(
 
     private val pageSize = 5
 
+    @Transactional
     override fun createToDo(request: CreateToDoRequest): ToDoResponse {
         return toDoRepository.save(request.toEntity()).toResponse()
     }
@@ -37,7 +38,7 @@ class ToDoServiceImpl(
         val nextCursor =
             if (slice.isLast) -1 else slice.content.last().id ?: throw IllegalStateException("Todo ID is null")
 
-        return SliceResponse<ToDoResponse>(slice.content.map { it.toResponse() }.toList(), nextCursor)
+        return SliceResponse(slice.content.map { it.toResponse() }.toList(), nextCursor)
     }
 
     override fun getFilteredToDos(sort: String, keyword: String, cursor: Long): SliceResponse<ToDoResponse> {
@@ -56,7 +57,7 @@ class ToDoServiceImpl(
         val nextCursor =
             if (slice.isLast) -1 else slice.content.last().id ?: throw IllegalStateException("Todo ID is null")
 
-        return SliceResponse<ToDoResponse>(slice.content.map { it.toResponse() }.toList(), nextCursor)
+        return SliceResponse(slice.content.map { it.toResponse() }.toList(), nextCursor)
     }
 
     override fun getToDoById(id: Long): ToDoResponse {
@@ -64,25 +65,24 @@ class ToDoServiceImpl(
         return todo.toResponse()
     }
 
+    @Transactional
     override fun deleteToDo(todoId: Long) {
         val todo = toDoRepository.findByIdOrNull(todoId) ?: throw ModelNotFoundException("ToDo", todoId)
         toDoRepository.delete(todo)
     }
 
+    @Transactional
     override fun updateToDo(toDoId: Long, request: UpdateToDoRequest): ToDoResponse {
         val todo = toDoRepository.findByIdOrNull(toDoId) ?: throw ModelNotFoundException("ToDo", toDoId)
-
-        todo.title = request.title
-        todo.content = request.content
-        todo.createdBy = request.createdBy
-
-        return toDoRepository.save(todo).toResponse()
+        todo.update(request)
+        return todo.toResponse()
     }
 
+    @Transactional
     override fun updateToDoStatus(toDoId: Long, status: Boolean): ToDoResponse {
         val todo = toDoRepository.findByIdOrNull(toDoId) ?: throw ModelNotFoundException("ToDo", toDoId)
-        todo.status = status
-        return toDoRepository.save(todo).toResponse()
+        todo.changeStatus(status)
+        return todo.toResponse()
     }
 
     private fun getDirection(sort: String) = when (sort) {

@@ -1,7 +1,9 @@
 package com.teamsparta.todo.domain.comment.model
 
 import com.teamsparta.todo.domain.comment.dto.CommentResponse
+import com.teamsparta.todo.domain.comment.dto.UpdateCommentRequest
 import com.teamsparta.todo.domain.todo.model.ToDo
+import com.teamsparta.todo.exception.UnauthorizedException
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -19,6 +21,16 @@ class Comment(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
+
+    fun isValidToModify(createdBy: String, password: String): Boolean {
+        return this.createdBy == createdBy && this.password == password
+    }
+
+    fun update(request: UpdateCommentRequest) {
+        if (isValidToModify(request.createdBy, request.password)) {
+            this.content = request.content
+        } else throw UnauthorizedException("이름/비밀번호가 일치하지 않습니다.")
+    }
 }
 
 fun Comment.toResponse(): CommentResponse {

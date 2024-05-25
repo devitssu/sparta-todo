@@ -6,12 +6,15 @@ import com.teamsparta.todo.domain.user.dto.UserResponse
 import com.teamsparta.todo.domain.user.repository.UserRepository
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class UserService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder
 ) {
+
+    @Transactional
     fun signUp(request: SingUpRequest): UserResponse {
         if (userRepository.existsByEmail(request.email)) throw IllegalStateException("User already exists")
         return userRepository.save(request.toEntity(passwordEncoder)).toResponse()

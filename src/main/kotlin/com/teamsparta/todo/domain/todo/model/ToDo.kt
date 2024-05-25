@@ -3,6 +3,7 @@ package com.teamsparta.todo.domain.todo.model
 import com.teamsparta.todo.domain.comment.model.Comment
 import com.teamsparta.todo.domain.comment.model.toResponse
 import com.teamsparta.todo.domain.todo.dto.ToDoResponse
+import com.teamsparta.todo.domain.todo.dto.UpdateToDoRequest
 import jakarta.persistence.*
 import org.hibernate.annotations.BatchSize
 import java.time.LocalDateTime
@@ -13,7 +14,7 @@ class ToDo(
     var content: String,
     var createdBy: String,
     var createdAt: LocalDateTime,
-    var status: Boolean = false,
+    private var status: Boolean = false,
 
     @BatchSize(size = 100)
     @OneToMany(mappedBy = "toDo", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
@@ -26,16 +27,27 @@ class ToDo(
     fun addComment(comment: Comment) {
         this.comments.add(comment)
     }
+
+    fun changeStatus(status: Boolean) {
+        this.status = status
+    }
+
+    fun toResponse(): ToDoResponse {
+        return ToDoResponse(
+            id = id ?: throw IllegalStateException("Todo ID is null"),
+            title = this.title,
+            content = this.content,
+            createdBy = this.createdBy,
+            createdAt = this.createdAt,
+            status = this.status,
+            comments = this.comments.map { it.toResponse() }
+        )
+    }
+
+    fun update(request: UpdateToDoRequest) {
+        this.title = request.title
+        this.content = request.content
+        this.createdBy = request.createdBy
+    }
 }
 
-fun ToDo.toResponse(): ToDoResponse {
-    return ToDoResponse(
-        id = id ?: throw IllegalStateException("Todo ID is null"),
-        title = this.title,
-        content = this.content,
-        createdBy = this.createdBy,
-        createdAt = this.createdAt,
-        status = this.status,
-        comments = this.comments.map { it.toResponse() }
-    )
-}
