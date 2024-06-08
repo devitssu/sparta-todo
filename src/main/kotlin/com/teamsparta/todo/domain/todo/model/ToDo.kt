@@ -4,6 +4,7 @@ import com.teamsparta.todo.domain.comment.model.Comment
 import com.teamsparta.todo.domain.comment.model.toResponse
 import com.teamsparta.todo.domain.todo.dto.ToDoResponse
 import com.teamsparta.todo.domain.todo.dto.UpdateToDoRequest
+import com.teamsparta.todo.domain.user.model.User
 import jakarta.persistence.*
 import org.hibernate.annotations.BatchSize
 import java.time.LocalDateTime
@@ -12,7 +13,11 @@ import java.time.LocalDateTime
 class ToDo(
     var title: String,
     var content: String,
-    var createdBy: String,
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    var createdBy: User,
+
     var createdAt: LocalDateTime,
     private var status: Boolean = false,
 
@@ -37,7 +42,7 @@ class ToDo(
             id = id ?: throw IllegalStateException("Todo ID is null"),
             title = this.title,
             content = this.content,
-            createdBy = this.createdBy,
+            createdBy = this.createdBy.toResponse(),
             createdAt = this.createdAt,
             status = this.status,
             comments = this.comments.map { it.toResponse() }
@@ -47,7 +52,6 @@ class ToDo(
     fun update(request: UpdateToDoRequest) {
         this.title = request.title
         this.content = request.content
-        this.createdBy = request.createdBy
     }
 }
 

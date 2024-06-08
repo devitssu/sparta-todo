@@ -1,0 +1,25 @@
+### 회원가입
+POST http://localhost:8080/sign-up
+Content-Type: application/json
+
+{
+  "email": "test2@test.com",
+  "password": "string",
+  "name": "string"
+}
+> {%
+    client.global.set("ACCESS_TOKEN", response.body["accessToken"])
+%}
+
+### 로그인
+POST http://localhost:8080/sign-in
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "string"
+}
+
+> {%
+    client.global.set("ACCESS_TOKEN", response.body["accessToken"])
+%}

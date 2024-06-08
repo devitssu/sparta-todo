@@ -1,0 +1,33 @@
+### 할 일 생성
+POST http://localhost:8080/api/todos
+Content-Type: application/json
+Authorization: Bearer {{ACCESS_TOKEN}}
+
+{
+  "title": "test title",
+  "content": "test content"
+}
+
+> {%
+    client.global.set("todoId", response.body["id"])
+%}
+
+### 할 일 수정
+PUT http://localhost:8080/api/todos/{{todoId}}
+Content-Type: application/json
+Authorization: Bearer {{ACCESS_TOKEN}}
+
+{
+  "title": "updated title",
+  "content": "updated content"
+}
+
+### 할 일 상태 변경
+PATCH http://localhost:8080/api/todos/{{todoId}}?status=true
+Content-Type: application/json
+Authorization: Bearer {{ACCESS_TOKEN}}
+
+### 할 일 삭제
+DELETE http://localhost:8080/api/todos/{{todoId}}
+Content-Type: application/json
+Authorization: Bearer {{ACCESS_TOKEN}}
