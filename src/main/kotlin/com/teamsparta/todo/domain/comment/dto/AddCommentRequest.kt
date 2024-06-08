@@ -2,19 +2,17 @@ package com.teamsparta.todo.domain.comment.dto
 
 import com.teamsparta.todo.domain.comment.model.Comment
 import com.teamsparta.todo.domain.todo.model.ToDo
+import com.teamsparta.todo.domain.user.model.User
 import java.time.LocalDateTime
 
 data class AddCommentRequest(
-    val content: String,
-    val createdBy: String,
-    val password: String
+    val content: String
 )
 
-fun AddCommentRequest.toEntity(todo: ToDo): Comment {
+fun AddCommentRequest.toEntity(todo: ToDo, user: User): Comment {
     return Comment(
         content = this.content,
-        createdBy = this.createdBy,
-        password = this.password,
+        createdBy = user,
         toDo = todo,
         createdAt = LocalDateTime.now()
     )

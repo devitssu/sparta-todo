@@ -8,7 +8,6 @@ import com.teamsparta.todo.infra.auth.AuthUser
 import com.teamsparta.todo.infra.auth.LoginUser
 import io.swagger.v3.oas.annotations.Parameter
 import jakarta.validation.Valid
-import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -86,10 +85,4 @@ class ToDoController(
             .status(HttpStatus.NO_CONTENT)
             .build()
     }
-
-    private fun getDirection(sort: String) = when (sort) {
-        "asc" -> Sort.Direction.ASC
-        else -> Sort.Direction.DESC
-    }
-
 }
