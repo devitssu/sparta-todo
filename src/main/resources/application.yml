@@ -21,3 +21,7 @@ logging:
         SQL: debug
         type.descriptor.sql: trace
         orm.jdbc.bind: trace
+jwt:
+  secret_key: 41f840f78d86090108a5bfa8e84183e6c4aa38d8e2acb868a71eed1eab1ed888676642e627e7c6e03866212a9b6f57e18756123a22234091afa43584e4e748fb
+  issuer: team.sparta.com
+  access_token_expiration_hour: 3
