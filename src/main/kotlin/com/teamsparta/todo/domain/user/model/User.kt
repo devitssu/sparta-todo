@@ -11,9 +11,14 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "users")
 class User(
-    var email: String,
+
+    @Column(nullable = true, unique = true)
+    var email: String? = null,
+
     var name: String,
-    var password: String,
+
+    @Column(nullable = true)
+    var password: String? = null,
 
     @BatchSize(size = 100)
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
@@ -25,7 +30,15 @@ class User(
 
     var createdAt: LocalDateTime,
 
-    ) {
+    var isSocialMember: Boolean,
+
+    @Column(nullable = true)
+    var provider: String? = null,
+
+    @Column(nullable = true)
+    var providerId: String? = null
+
+) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null

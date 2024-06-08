@@ -23,7 +23,8 @@ data class SingUpRequest(
             email = this.email,
             name = this.name,
             password = passwordEncoder.encode(this.password),
-            createdAt = LocalDateTime.now()
+            createdAt = LocalDateTime.now(),
+            isSocialMember = false
         )
     }
 }
