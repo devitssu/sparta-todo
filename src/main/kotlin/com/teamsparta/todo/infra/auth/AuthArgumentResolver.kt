@@ -2,6 +2,7 @@ package com.teamsparta.todo.infra.auth
 
 import com.teamsparta.todo.infra.jwt.JwtPlugin
 import jakarta.servlet.http.HttpServletRequest
+import org.apache.tomcat.websocket.AuthenticationException
 import org.springframework.core.MethodParameter
 import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Component
@@ -38,9 +39,9 @@ class AuthArgumentResolver(
         if (token != null) {
             jwtPlugin.validateToken(token)
                 .onSuccess { return AuthUser(id = jwtPlugin.getUserId(token)) }
-                .onFailure { throw IllegalArgumentException("Invalid Token") }
+                .onFailure { throw AuthenticationException("Invalid Token") }
         }
-        throw IllegalArgumentException("Invalid Token")
+        throw AuthenticationException("Invalid Token")
     }
 
     private fun HttpServletRequest.getBearerToken(): String? {
